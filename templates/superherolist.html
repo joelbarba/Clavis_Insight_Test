@@ -1,5 +1,5 @@
 <div class="container-fluid" ng-init="CTRL_SuperheroList.loadData();">
-  <div class="row list-container" ng-if="!CTRL_SuperheroList.error_state">
+  <div class="row list-container" ng-if="!CTRL_SuperheroList.state">
 
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" 
          ng-repeat="item in CTRL_SuperheroList.superheroes">
@@ -15,18 +15,22 @@
     
   </div>
 
-  <div class="alert alert-warning" ng-if="!CTRL_SuperheroList.superheroes.length">
+  <div class="alert alert-info" ng-if="CTRL_SuperheroList.state=='loading'">
+      <strong>Loading: </strong> Wait please
+  </div>
+  
+  <div class="alert alert-warning" ng-if="!CTRL_SuperheroList.superheroes.length && CTRL_SuperheroList.state==null">
       <strong>Warning: </strong> There is no results to show. 
       <button type="submit" class="btn btn-default" 
               ng-if="filter_text"
               ng-click="CTRL_SuperheroList.reset_search()">Remove filter</button>
   </div>  
   
-  <div class="alert alert-danger" ng-if="CTRL_SuperheroList.error_state">
+  <div class="alert alert-danger" ng-if="CTRL_SuperheroList.state=='error'">
       <a href="#" class="close" data-dismiss="alert" aria-label="close" ng-click="CTRL_SuperheroList.cancel_error()">×</a>
       <strong>Error: </strong> {{CTRL_SuperheroList.error_text}}
   </div>
 
-  
+  {{CTRL_SuperheroList.state}}
 </div>
 

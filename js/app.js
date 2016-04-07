@@ -32,14 +32,14 @@
             var data_url = 'https://athena-7.herokuapp.com/ancients.json';
             var last_search = { param: null, value: null }
           
-            vm.error_state = false;
+            vm.state = null;
             vm.error_text = '';
             vm.superheroes = [];
 
             
             // Function to cancel error (and reload all data)
             vm.cancel_error = function() {
-                vm.error_state = false;
+                vm.state = null;
                 vm.error_text = '';
                 vm.loadData();
             };
@@ -49,6 +49,7 @@
             vm.loadData = function() {
                 console.log('loading data');
                 last_search = { param: null, value: null };
+                vm.state = 'loading';
                 $http.get(data_url).then(load_response, error_response);
             };
           
@@ -71,6 +72,7 @@
                     console.log('Filtering data');
                     last_search = { param: param, value: value };
                     if (value) url += '?' + param + '=' + value;
+                    vm.state = 'loading';
                     $http.get(url).then(load_response, error_response);
                     console.log(last_search);
                 }
@@ -79,7 +81,7 @@
             
             // Function to call after a correct response in the request
             var load_response = function(response) {
-                vm.error_state = false;
+                vm.state = null;
                 vm.error_text = '';              
                 if (response.status == 200 && response.statusText == "OK") {
                     if (response.data.hasOwnProperty('ancients'))  vm.superheroes = response.data.ancients;
@@ -93,7 +95,7 @@
             
             // Function to call after an error in the request
             var error_response = function(response) {
-                vm.error_state = true;
+                vm.state = 'error';
                 vm.error_text = response.data.error;
                 console.log('error loading data');
                 console.log(response);
